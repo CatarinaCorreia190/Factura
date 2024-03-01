@@ -1,0 +1,55 @@
+{
+  "name": "invoice",
+  "version": "1.0.0",
+  "description": "invoice software",
+  "main": "main/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "test": "jest --passWithNoTests --noStackTrace --runInBand",
+    "test:verbose": "jest --passWithNoTests --runInBand",
+    "test:watch": "npm test -- --watch",
+    "test:staged": "npm test -- --findRelatedTests",
+    "test:ci": "npm test -- --coverage"
+  },
+  "keywords": [
+    "Freelance",
+    "jobs"
+  ],
+  "author": "Uta Company",
+  "license": "ISC",
+  "devDependencies": {
+    "@swc/core": "^1.3.61",
+    "@swc/jest": "^0.2.26",
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.1",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.2.5",
+    "@types/supertest": "^2.0.12",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@types/uuid": "^9.0.1",
+    "@types/yup": "^0.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "eslint": "^8.41.0",
+    "jest": "^29.5.0",
+    "mongodb-memory-server": "^8.12.2",
+    "nodemon": "^3.1.0",
+    "supertest": "^6.3.3",
+    "tslint": "^6.1.3",
+    "tsx": "^3.12.7",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.2.2",
+    "nodemailer": "^6.9.7",
+    "swagger-ui-express": "^5.0.0",
+    "uuid": "^9.0.0",
+    "yup": "^1.2.0"
+  }
+}
