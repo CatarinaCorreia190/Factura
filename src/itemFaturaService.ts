@@ -19,15 +19,14 @@ export class ItemFaturaService {
 
     criarItemFatura (idFatura: string, idProduto: string, quantidade: number): string {
         const produto = this._produtoService.encontrarPorId(idProduto);
-        if (!produto) {
-            throw new Error("Produto não encontrado");
-        }
+        if (!produto) throw new Error("Produto não encontrado");
+        if (produto.quantidade < quantidade) throw new Error("Quantidade insuficiente");
         const itemFatura = new ItemFatura({
-            idFatura,
-            nomeProduto: produto.nome,
-            quandidateProduto: quantidade,
-            precoUnitario: produto.preco,
-            imposto: 14,
+          idFatura,
+          idProduto: produto.idProduto,
+          quantidade: quantidade,
+          precoUnitario: produto.preco,
+          imposto: 14,
         });
         this._items.push(itemFatura);
         return itemFatura.idItemFatura;

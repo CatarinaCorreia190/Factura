@@ -42,6 +42,7 @@ export class ClienteService {
         cliente.nome = nome;
         cliente.email = email;
         cliente.endereco = endereco;
+        cliente.actualizadoEm = new Date();
         const clienteInddex = this._clientes.findIndex((cliente) => cliente.idCliente === id);
         this._clientes[clienteInddex] = cliente;
     }

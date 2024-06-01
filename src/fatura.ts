@@ -1,16 +1,19 @@
 import * as crypto from "node:crypto";
+import { ItemFatura } from "./ItemFatura";
 
 export enum TipoEstado {
+    EMITIDA = 'Emitida',
     PAGO = 'Pago',
     ANULADA = 'Anulada',
 }
 
 type PropriedadesFatura = {
     idFatura?: string;
-    dataEmissao: Date;
+    dataEmissao?: Date;
+    dataPago?: Date;
     idCliente: string;
-    montanteTotal: number;
-    estado: TipoEstado;
+    estado?: TipoEstado;
+    items?: ItemFatura[];
     criadoEm?: Date;
     actualizadoEm?: Date;
 }
@@ -18,30 +21,57 @@ type PropriedadesFatura = {
 export class Fatura {
     private _idFatura: string;
     private _dataEmissao: Date;
+    private _dataPago: Date;
     private _idCliente: string;
-    private _montanteTotal: number;
     private _estado: TipoEstado;
     private _criadoEm: Date;
     private _actualizadoEm: Date;
+    private _items: ItemFatura[];
 
     public constructor(propriedades: PropriedadesFatura) {
         this._idFatura = propriedades.idFatura ?? crypto.randomUUID();
-        this._dataEmissao = propriedades.dataEmissao;
+        this._dataEmissao = propriedades.dataEmissao ?? new Date();
+        this._dataPago = propriedades.dataPago ?? new Date();
         this._idCliente = propriedades.idCliente;
-        this._montanteTotal = propriedades.montanteTotal;
-        this._estado = propriedades.estado == 'Pago'? TipoEstado.PAGO : TipoEstado.ANULADA;
+        this._estado = propriedades.estado ?? TipoEstado.EMITIDA;
         this._criadoEm = propriedades.criadoEm ?? new Date();
         this._actualizadoEm = propriedades.actualizadoEm ?? new Date();
+        this._items = propriedades.items ?? []
     }
 
     get idFatura(): string { return this._idFatura; }
     get dataEmissao(): Date { return this._dataEmissao; }
+    get dataPago(): Date { return this._dataPago; }
     get idCliente(): string { return this._idCliente; }
-    get montanteTotal(): number { return this._montanteTotal; }
     get estado(): string { return this._estado; }
     get criadoEm(): Date { return this._criadoEm; }
     get actualizadoEm(): Date { return this._actualizadoEm; }
 
     set estado(estado: TipoEstado) { this._estado = estado }
     set actualizadoEm(value: Date) { this._actualizadoEm = value; }
+
+    public pagar() {
+        if (this._estado != TipoEstado.EMITIDA) throw new Error('Estado Inválido');
+        this._estado = TipoEstado.PAGO;
+        this._dataPago = new Date();
+    }
+
+    public anular() {
+        this._estado = TipoEstado.ANULADA;
+    }
+
+    addItem(itemFatura: ItemFatura) {
+        this._items.forEach((item) => {
+            if (item.idProduto == itemFatura.idProduto) throw new Error("Item ja existe na fatura");
+        })
+        this._items.push(itemFatura);
+    }
+
+    total (): number {
+        let total = 0;
+        this._items.forEach((item) => {
+            total += item.total();
+        })
+        return total;
+    }
 }

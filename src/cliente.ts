@@ -40,5 +40,6 @@ export class Cliente {
     set nome(nome: string) { this._nome = nome }
     set email(email: string) { this._email = email }
     set endereco(email: string) { this._endereco = email }
+    set actualizadoEm(date: Date) { this._actualizadoEm = date; }
 
 }

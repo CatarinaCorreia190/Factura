@@ -46,4 +46,12 @@ export class ProdutoService {
         const produtoIndex = this._produtos.findIndex((produto) => produto.idProduto === id);
         this._produtos[produtoIndex] = produto;
     }
+
+    addQuantidade(id: string, quantidade: number): void {
+        const produto = this._produtos.filter((produto) => produto.idProduto === id)[0];
+        if (!produto) throw new Error('Produto não encontrado');
+        produto.quantidade = quantidade;
+        const produtosIndex = this._produtos.findIndex((produto) => produto.idProduto === id);
+        this._produtos[produtosIndex] = produto;
+    }
 }
