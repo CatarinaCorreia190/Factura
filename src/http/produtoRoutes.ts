@@ -8,12 +8,12 @@ const produtoRoutes = Router();
 const produtoDatabase = ProdutoDatabase.getInstance()
 const produtoService = new ProdutoService(produtoDatabase);
 
-produtoRoutes.get("/", cors, async (req: Request, res: Response) => {
+produtoRoutes.get("/",  async (req: Request, res: Response) => {
     const produtos = await produtoService.encontrarTodos();
     res.status(200).json(produtos);
 })
 
-produtoRoutes.post("/", cors, async (req: Request, res: Response) => {
+produtoRoutes.post("/",  async (req: Request, res: Response) => {
     const body = req.body;
     try {
         const result = await produtoService.criarProduto(body.nome, body.descricao, body.preco, body.regime);
@@ -23,7 +23,7 @@ produtoRoutes.post("/", cors, async (req: Request, res: Response) => {
     }
 })
 
-produtoRoutes.get("/:idProduto", cors, async (req: Request, res: Response) => {
+produtoRoutes.get("/:idProduto",  async (req: Request, res: Response) => {
     const idProduto = req.params.idProduto;
     try {
         const result = await produtoService.encontrarPorId(idProduto);
@@ -33,7 +33,7 @@ produtoRoutes.get("/:idProduto", cors, async (req: Request, res: Response) => {
     }
 })
 
-produtoRoutes.patch("/atualizar/:idProduto", cors, async (req: Request, res: Response) => {
+produtoRoutes.patch("/atualizar/:idProduto",  async (req: Request, res: Response) => {
     const idProduto = req.params.idProduto;
     const body = req.body;
     try {
@@ -44,7 +44,7 @@ produtoRoutes.patch("/atualizar/:idProduto", cors, async (req: Request, res: Res
     }
 })
 
-produtoRoutes.patch("/addquantidade/:idProduto", cors, async (req: Request, res: Response) => {
+produtoRoutes.patch("/addquantidade/:idProduto",  async (req: Request, res: Response) => {
     const idProduto = req.params.idProduto;
     try {
         const body = req.body;

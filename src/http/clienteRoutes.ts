@@ -8,7 +8,7 @@ const clienteRoutes = Router();
 const clienteDatabase = ClienteDatabase.getInstance();
 const clienteService = new ClienteService(clienteDatabase);
 
-clienteRoutes.get("/", cors,async (req: Request, res: Response) => {
+clienteRoutes.get("/", async (req: Request, res: Response) => {
     try {
         const clientes = await clienteService.encontrarTodos();
         res.status(200).json(clientes);
@@ -17,7 +17,7 @@ clienteRoutes.get("/", cors,async (req: Request, res: Response) => {
     }
 })
 
-clienteRoutes.get("/:idCliente", cors, async (req: Request, res: Response) => {
+clienteRoutes.get("/:idCliente",  async (req: Request, res: Response) => {
     const idCliente = req.params.idCliente;
     try {
         const cliente = await clienteService.encontrarPorId(idCliente);
@@ -27,7 +27,7 @@ clienteRoutes.get("/:idCliente", cors, async (req: Request, res: Response) => {
     }
 })
 
-clienteRoutes.post("/", cors, async (req: Request, res: Response) => {
+clienteRoutes.post("/",  async (req: Request, res: Response) => {
     const body = req.body;
     try {
         const idCliente = await clienteService.criarCliente(body.nome, body.nif, body.email, body.endereco);
@@ -37,7 +37,7 @@ clienteRoutes.post("/", cors, async (req: Request, res: Response) => {
     }
 })
 
-clienteRoutes.patch("/:idCliente", cors, async (req: Request, res: Response) => {
+clienteRoutes.patch("/:idCliente",  async (req: Request, res: Response) => {
     const idCliente = req.params.idCliente;
     const body = req.body;
     try {

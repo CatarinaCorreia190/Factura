@@ -16,7 +16,7 @@ const clienteService = new ClienteService(clienteDatabase);
 const faturaDatabase = FaturaDatabase.getInstance();
 const faturaService = new FaturaService(faturaDatabase, produtoService, clienteService);
 
-faturaRoutes.get("/", cors, async (req: Request, res: Response) => {
+faturaRoutes.get("/",  async (req: Request, res: Response) => {
     try {
         const faturas = await faturaService.encontrarTodas();
         res.status(200).json(faturas);
@@ -25,7 +25,7 @@ faturaRoutes.get("/", cors, async (req: Request, res: Response) => {
     }
 });
 
-faturaRoutes.get("/:idFatura", cors, async (req: Request, res: Response) => {
+faturaRoutes.get("/:idFatura",  async (req: Request, res: Response) => {
     const idFatura = req.params.idFatura;
     try {
         const fatura = await faturaService.encontrarPorId(idFatura);
@@ -35,7 +35,7 @@ faturaRoutes.get("/:idFatura", cors, async (req: Request, res: Response) => {
     }
 })
 
-faturaRoutes.post("/", cors, async (req: Request, res: Response) => {
+faturaRoutes.post("/",  async (req: Request, res: Response) => {
     const body = req.body;
     try {
         const idFatura = await faturaService.criarFatura(body.idCliente, body.items);
@@ -45,7 +45,7 @@ faturaRoutes.post("/", cors, async (req: Request, res: Response) => {
     }
 })
 
-faturaRoutes.put("/:idFatura", cors, async (req: Request, res: Response) => {
+faturaRoutes.put("/:idFatura",  async (req: Request, res: Response) => {
     const idFatura = req.params.idFatura;
     try {
         const fatura = await faturaService.anular(idFatura);
