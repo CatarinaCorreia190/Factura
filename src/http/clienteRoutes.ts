@@ -46,3 +46,5 @@ clienteRoutes.patch("/:idCliente", async (req: Request, res: Response) => {
         res.status(400).json({ "error": error.message });
     }
 })
+
+export default clienteRoutes;

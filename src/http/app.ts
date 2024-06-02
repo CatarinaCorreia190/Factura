@@ -5,5 +5,6 @@ const app = express();
 app.use(express.json());
 
 app.use('/api/produto', produtoRoutes);
+app.use('/api/cliente', );
 
 export default app;
