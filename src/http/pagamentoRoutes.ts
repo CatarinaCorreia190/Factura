@@ -7,6 +7,7 @@ import {ProdutoDatabase} from "../database/produtoDatabase";
 import {ProdutoService} from "../service/produtoService";
 import {PagamentoDatabase} from "../database/pagamentoDatabase";
 import {PagamentoService} from "../service/pagamentoService";
+import {cors} from "./cors";
 
 
 const pagamentoRoutes = Router();
@@ -19,7 +20,7 @@ const faturaService = new FaturaService(faturaDatabase, produtoService, clienteS
 const pagamentoDatabase = PagamentoDatabase.getInstance();
 const pagamentoService = new PagamentoService(pagamentoDatabase, faturaService);
 
-pagamentoRoutes.get("/", async (req: Request, res: Response) => {
+pagamentoRoutes.get("/", cors, async (req: Request, res: Response) => {
     try {
         const pagamentos = await pagamentoService.encontrarTodos()
         res.status(200).json(pagamentos);
@@ -28,7 +29,7 @@ pagamentoRoutes.get("/", async (req: Request, res: Response) => {
     }
 })
 
-pagamentoRoutes.get("/:idPagamento", async (req: Request, res: Response) => {
+pagamentoRoutes.get("/:idPagamento", cors, async (req: Request, res: Response) => {
     const idPagamento = req.params.idPagamento;
     try {
         const pagamento = await pagamentoService.encontrarPorId(idPagamento);
@@ -38,7 +39,7 @@ pagamentoRoutes.get("/:idPagamento", async (req: Request, res: Response) => {
     }
 })
 
-pagamentoRoutes.post("/", async (req: Request, res: Response) => {
+pagamentoRoutes.post("/", cors, async (req: Request, res: Response) => {
     const body = req.body;
     try {
         const pagamento = await pagamentoService.criarPagamento(body.idFatura, body.montantePago);
