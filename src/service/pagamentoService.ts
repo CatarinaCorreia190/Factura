@@ -12,7 +12,7 @@ export class PagamentoService {
         this._faturaService = faturaService;
     }
 
-    async criarPagamento(idFatura: string, montantePago: number): Promise<string> {
+    async criarPagamento(idFatura: string, montantePago: number): Promise<Pagamento> {
         const fatura = await this._faturaService.encontrarPorId(idFatura);
         if (!fatura) throw new Error("Fatura inexistente");
         if (montantePago < fatura.total()) throw new Error("Montante entrege é insuficiente");
@@ -22,7 +22,7 @@ export class PagamentoService {
         });
         await this._faturaService.pagar(fatura.idFatura);
         await this._pagamentoDatabase.criar(pagamento);
-        return pagamento.idPagamento;
+        return pagamento;
     }
 
     async encontrarPorId(id: string): Promise<Pagamento | undefined> {

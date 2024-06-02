@@ -8,7 +8,7 @@ export class ClienteService {
         this._clienteDatabase = clienteDatabase;
     }
 
-    async criarCliente(nome: string, nif: string, email: string, endereco: string): Promise<string> {
+    async criarCliente(nome: string, nif: string, email: string, endereco: string): Promise<Cliente> {
         let clienteExiste;
         clienteExiste = await this._clienteDatabase.encontrarPorNif(nif);
         if (clienteExiste) throw new Error("Cliente já existe, NIF fornecido já existente");
@@ -16,7 +16,7 @@ export class ClienteService {
         if (clienteExiste) throw new Error("Cliente já existe, Email fornecido já existente");
         const cliente = new Cliente({nome, nif, email, endereco});
         this._clienteDatabase.criar(cliente);
-        return cliente.idCliente;
+        return cliente;
     }
 
     async encontrarPorId(id: string): Promise<Cliente | undefined> {

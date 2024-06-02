@@ -9,11 +9,11 @@ export class ProdutoService {
         this._produtoDatabase = produtoDatabase;
     }
 
-    async criarProduto(nome: string, descricao: string, preco: number, regime: string): Promise<string> {
+    async criarProduto(nome: string, descricao: string, preco: number, regime: string): Promise<Produto> {
         const regimeProduto = regime === 'Regime Geral' ? TipoRegime.REGIME_GERAL : TipoRegime.EXENTO;
         const produto = new Produto({nome, descricao, preco, regime: regimeProduto});
         await this._produtoDatabase.criar(produto);
-        return produto.idProduto;
+        return produto;
     }
 
     async encontrarPorId(id: string): Promise<Produto | undefined> {

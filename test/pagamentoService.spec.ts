@@ -18,13 +18,13 @@ describe('PagamentoService unit tests', () => {
         const faturaService = new FaturaService(faturaDatabase, produtoService, clienteService);
         const pagamentoService = new PagamentoService(pagamentoDatabase, faturaService);
 
-        const idCliente = await clienteService.criarCliente("Any Name", "0987654321LA098", "example@example.com", "Luanda, Angola");
-        const idProduto_1 = await produtoService.criarProduto("arroz", "Arroz Tio Lucas de 1KG", 500, "Regime Geral");
-        const idProduto_2 = await produtoService.criarProduto("feijão", "Feijão Amarelo 1KG", 2500, "Regime Geral");
-        produtoService.addQuantidade(idProduto_1, 10);
-        produtoService.addQuantidade(idProduto_2, 10);
-        const produto_1 = await produtoService.encontrarPorId(idProduto_1);
-        const produto_2 = await produtoService.encontrarPorId(idProduto_2);
+        const cliente = await clienteService.criarCliente("Any Name", "0987654321LA098", "example@example.com", "Luanda, Angola");
+        const Produto_1 = await produtoService.criarProduto("arroz", "Arroz Tio Lucas de 1KG", 500, "Regime Geral");
+        const Produto_2 = await produtoService.criarProduto("feijão", "Feijão Amarelo 1KG", 2500, "Regime Geral");
+        produtoService.addQuantidade(Produto_1.idProduto, 10);
+        produtoService.addQuantidade(Produto_2.idProduto, 10);
+        const produto_1 = await produtoService.encontrarPorId(Produto_1.idProduto);
+        const produto_2 = await produtoService.encontrarPorId(Produto_2.idProduto);
         const items = [
             {
                 idProduto: produto_1!.idProduto,
@@ -37,13 +37,13 @@ describe('PagamentoService unit tests', () => {
                 imposto: 7,
             },
         ];
-        const idFatura = await faturaService.criarFatura(idCliente, items);
-        const fatura = await faturaService.encontrarPorId(idFatura);
-        const idPagamento = await pagamentoService.criarPagamento(idFatura, 7000)
-        const pagamento = await pagamentoService.encontrarPorId(idPagamento);
+        const newFatura = await faturaService.criarFatura(cliente.idCliente, items);
+        const fatura = await faturaService.encontrarPorId(newFatura.idFatura);
+        const newPagamento = await pagamentoService.criarPagamento(newFatura.idFatura, 7000)
+        const pagamento = await pagamentoService.encontrarPorId(newPagamento.idPagamento);
         console.log(fatura);
         console.log(pagamento);
         expect(fatura?.estado).toBe("Pago");
-        expect(pagamento?.idFatura).toBe(idFatura);
+        expect(pagamento?.idFatura).toBe(fatura?.idFatura);
     })
 })

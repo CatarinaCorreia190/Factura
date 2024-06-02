@@ -20,7 +20,7 @@ export class FaturaService {
     this._clienteService = clienteService;
   }
 
-  async criarFatura(idCliente: string, items: ItemInput[]): Promise<string> {
+  async criarFatura(idCliente: string, items: ItemInput[]): Promise<Fatura> {
     const clientAlreadyExists = await this._clienteService.encontrarPorId(idCliente);
     if (!clientAlreadyExists) throw new Error("Cliente inexistente");
     const fatura = new Fatura({ idCliente });
@@ -38,7 +38,7 @@ export class FaturaService {
       fatura.addItem(newItem);
     }
     this._faturaDatabase.criar(fatura);
-    return fatura.idFatura;
+    return fatura;
   }
 
   async encontrarPorId(id: string): Promise<Fatura | undefined> {

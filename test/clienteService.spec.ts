@@ -3,15 +3,15 @@ import {ClienteDatabase} from "../src/database/clienteDatabase";
 
 describe('ClienteService Unit Tests', () => {
     test('Deve criar um cliente', async () => {
-        const clienteDatabase = ClienteDatabase.getInstance()
+        const clienteDatabase = new ClienteDatabase()
         const clienteService = new ClienteService(clienteDatabase);
         const nome = "qualquer_nome";
         const nif = "123456789LJ098";
         const email = "test@test.com";
         const endereco = "Bloco 20, Centralidade do Kilamba";
-        const idCLiente = await clienteService.criarCliente(nome, nif, email, endereco);
-        const clienteCriado = await clienteService.encontrarPorId(idCLiente);
-        expect(clienteCriado?.idCliente).toBe(idCLiente);
+        const cliente = await clienteService.criarCliente(nome, nif, email, endereco);
+        const clienteCriado = await clienteService.encontrarPorId(cliente.idCliente);
+        expect(clienteCriado?.idCliente).toBe(cliente.idCliente);
         expect(clienteCriado?.nome).toBe(nome);
         expect(clienteCriado?.nif).toBe(nif);
         expect(clienteCriado?.email).toBe(email);
@@ -20,7 +20,7 @@ describe('ClienteService Unit Tests', () => {
     });
 
     test('Deve retornar um erro se tentar criar um cliente com nif já existente', async () => {
-        const clienteDatabase = ClienteDatabase.getInstance()
+        const clienteDatabase = new ClienteDatabase()
         const clienteService = new ClienteService(clienteDatabase);
         const nome = "qualquer_nome";
         const nif = "123456789LJ098";

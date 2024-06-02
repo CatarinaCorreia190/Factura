@@ -14,13 +14,13 @@ describe("FaturaService Unit Tests", () => {
     const clienteService = new ClienteService(clienteDatabase);
     const faturaService = new FaturaService(faturaDatabase, produtoService, clienteService);
 
-    const idCliente = await clienteService.criarCliente("Any Name", "0987654321LA098", "example@example.com", "Luanda, Angola");
-    const idProduto_1 = await produtoService.criarProduto("arroz", "Arroz Tio Lucas de 1KG", 500, "Regime Geral");
-    const idProduto_2 = await produtoService.criarProduto("feijão", "Feijão Amarelo 1KG", 2500, "Regime Geral");
-    produtoService.addQuantidade(idProduto_1, 10);
-    produtoService.addQuantidade(idProduto_2, 10);
-    const produto_1 = await produtoService.encontrarPorId(idProduto_1);
-    const produto_2 = await produtoService.encontrarPorId(idProduto_2);
+    const cliente = await clienteService.criarCliente("Any Name", "0987654321LA098", "example@example.com", "Luanda, Angola");
+    const Produto_1 = await produtoService.criarProduto("arroz", "Arroz Tio Lucas de 1KG", 500, "Regime Geral");
+    const Produto_2 = await produtoService.criarProduto("feijão", "Feijão Amarelo 1KG", 2500, "Regime Geral");
+    produtoService.addQuantidade(Produto_1.idProduto, 10);
+    produtoService.addQuantidade(Produto_2.idProduto, 10);
+    const produto_1 = await produtoService.encontrarPorId(Produto_1.idProduto);
+    const produto_2 = await produtoService.encontrarPorId(Produto_2.idProduto);
     const items = [
       {
         idProduto: produto_1!.idProduto,
@@ -33,8 +33,8 @@ describe("FaturaService Unit Tests", () => {
         imposto: 7,
       },
     ];
-    const idFatura = await faturaService.criarFatura(idCliente, items);
-    const fatura = await faturaService.encontrarPorId(idFatura);
+    const newFatura = await faturaService.criarFatura(cliente.idCliente, items);
+    const fatura = await faturaService.encontrarPorId(newFatura.idFatura);
     console.log(fatura);
     expect(fatura?.total()).toBeGreaterThan(6000);
   })
