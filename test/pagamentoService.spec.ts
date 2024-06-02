@@ -1,22 +1,30 @@
-import {ProdutoService} from "../src/produtoService";
-import {ClienteService} from "../src/clienteService";
-import {FaturaService} from "../src/faturaService";
-import {PagamentoService} from "../src/pagamentoService";
+import {ProdutoService} from "../src/service/produtoService";
+import {ClienteService} from "../src/service/clienteService";
+import {FaturaService} from "../src/service/faturaService";
+import {PagamentoService} from "../src/service/pagamentoService";
+import {ProdutoDatabase} from "../src/database/produtoDatabase";
+import {ClienteDatabase} from "../src/database/clienteDatabase";
+import {FaturaDatabase} from "../src/database/faturaDatabase";
+import {PagamentoDatabase} from "../src/database/pagamentoDatabase";
 
 describe('PagamentoService unit tests', () => {
-    test("Deve criar um pagamento e alterar o estado da fatura para pago", () => {
-        const produtoService = ProdutoService.getInstance();
-        const clienteService = ClienteService.getInstance();
-        const faturaService = FaturaService.getInstance(produtoService, clienteService);
-        const pagamentoService = PagamentoService.getInstance(faturaService);
+    test("Deve criar um pagamento e alterar o estado da fatura para pago", async () => {
+        const produtoDatabase = ProdutoDatabase.getInstance();
+        const clienteDatabase = ClienteDatabase.getInstance()
+        const faturaDatabase = FaturaDatabase.getInstance()
+        const pagamentoDatabase = PagamentoDatabase.getInstance()
+        const produtoService = new ProdutoService(produtoDatabase);
+        const clienteService = new ClienteService(clienteDatabase);
+        const faturaService = new FaturaService(faturaDatabase, produtoService, clienteService);
+        const pagamentoService = new PagamentoService(pagamentoDatabase, faturaService);
 
-        const idCliente = clienteService.criarCliente("Any Name", "0987654321LA098", "example@example.com", "Luanda, Angola");
-        const idProduto_1 = produtoService.criarProduto("arroz", "Arroz Tio Lucas de 1KG", 500, "Regime Geral");
-        const idProduto_2 = produtoService.criarProduto("feijão", "Feijão Amarelo 1KG", 2500, "Regime Geral");
+        const idCliente = await clienteService.criarCliente("Any Name", "0987654321LA098", "example@example.com", "Luanda, Angola");
+        const idProduto_1 = await produtoService.criarProduto("arroz", "Arroz Tio Lucas de 1KG", 500, "Regime Geral");
+        const idProduto_2 = await produtoService.criarProduto("feijão", "Feijão Amarelo 1KG", 2500, "Regime Geral");
         produtoService.addQuantidade(idProduto_1, 10);
         produtoService.addQuantidade(idProduto_2, 10);
-        const produto_1 = produtoService.encontrarPorId(idProduto_1);
-        const produto_2 = produtoService.encontrarPorId(idProduto_2);
+        const produto_1 = await produtoService.encontrarPorId(idProduto_1);
+        const produto_2 = await produtoService.encontrarPorId(idProduto_2);
         const items = [
             {
                 idProduto: produto_1!.idProduto,
@@ -29,10 +37,10 @@ describe('PagamentoService unit tests', () => {
                 imposto: 7,
             },
         ];
-        const idFatura = faturaService.criarFatura(idCliente, items);
-        const idPagamento = pagamentoService.criarPagamento(idFatura, 7000)
-        const pagamento = pagamentoService.encontrarPorId(idPagamento);
-        const fatura = faturaService.encontrarPorId(idFatura);
+        const idFatura = await faturaService.criarFatura(idCliente, items);
+        const fatura = await faturaService.encontrarPorId(idFatura);
+        const idPagamento = await pagamentoService.criarPagamento(idFatura, 7000)
+        const pagamento = await pagamentoService.encontrarPorId(idPagamento);
         console.log(fatura);
         console.log(pagamento);
         expect(fatura?.estado).toBe("Pago");
