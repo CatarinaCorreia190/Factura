@@ -5,6 +5,8 @@
   "main": "main/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "build": "npm install && rimraf dist && tsc",
+    "start": "node dist/src/server.js",
     "test": "jest --passWithNoTests --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:watch": "npm test -- --watch",
@@ -48,6 +50,7 @@
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.2.2",
     "nodemailer": "^6.9.7",
+    "rimraf": "^5.0.7",
     "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.0",
     "yup": "^1.2.0"
