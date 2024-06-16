@@ -40,6 +40,14 @@ export class ProdutoService {
     async addQuantidade(id: string, quantidade: number): Promise<Produto> {
         const produto = await this._produtoDatabase.encontrarPorId(id);
         if (!produto) throw new Error('Produto não encontrado');
+        produto.quantidade += quantidade;
+        await this._produtoDatabase.guardar(produto);
+        return produto;
+    }
+
+    async actualizarQuantidade(id: string, quantidade: number): Promise<Produto> {
+        const produto = await this._produtoDatabase.encontrarPorId(id);
+        if (!produto) throw new Error('Produto não encontrado');
         produto.quantidade = quantidade;
         await this._produtoDatabase.guardar(produto);
         return produto;

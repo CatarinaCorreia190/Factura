@@ -9,6 +9,7 @@ export enum TipoEstado {
 
 type PropriedadesFatura = {
     idFatura?: string;
+    numeroFatura: string;
     dataEmissao?: Date;
     dataPago?: Date;
     idCliente: string;
@@ -20,6 +21,7 @@ type PropriedadesFatura = {
 
 export class Fatura {
     private _idFatura: string;
+    private _numeroFatura: string;
     private _dataEmissao: Date;
     private _dataPago: Date;
     private _idCliente: string;
@@ -30,6 +32,7 @@ export class Fatura {
 
     public constructor(propriedades: PropriedadesFatura) {
         this._idFatura = propriedades.idFatura ?? crypto.randomUUID();
+        this._numeroFatura = propriedades.numeroFatura;
         this._dataEmissao = propriedades.dataEmissao ?? new Date();
         this._dataPago = propriedades.dataPago ?? new Date();
         this._idCliente = propriedades.idCliente;
@@ -40,6 +43,7 @@ export class Fatura {
     }
 
     get idFatura(): string { return this._idFatura; }
+    get numeroFatura(): string { return this._numeroFatura; }
     get dataEmissao(): Date { return this._dataEmissao; }
     get dataPago(): Date { return this._dataPago; }
     get idCliente(): string { return this._idCliente; }
@@ -62,7 +66,10 @@ export class Fatura {
 
     addItem(itemFatura: ItemFatura) {
         this._items.forEach((item) => {
-            if (item.idProduto == itemFatura.idProduto) throw new Error("Item ja existe na fatura");
+            if (item.idProduto == itemFatura.idProduto) {
+                item.quantidade = item.quantidade + itemFatura.quantidade;
+                return;
+            }
         })
         this._items.push(itemFatura);
     }

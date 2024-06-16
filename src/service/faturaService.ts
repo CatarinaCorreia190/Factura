@@ -4,6 +4,7 @@ import {ItemFatura} from "../entity/ItemFatura";
 import { TipoRegime } from "../entity/produto";
 import {ProdutoService} from "./produtoService";
 import {FaturaDatabase} from "../database/faturaDatabase";
+import { InvoiceNumber } from "../entity/invoiceNumber";
 
 export class FaturaService {
   private readonly _faturaDatabase: FaturaDatabase;
@@ -20,14 +21,16 @@ export class FaturaService {
     this._clienteService = clienteService;
   }
 
-  async criarFatura(idCliente: string, items: ItemInput[]): Promise<Fatura> {
+  async criarFatura(idCliente: string, items: ItemInput[]): Promise<FaturaOutput> {
     const clientAlreadyExists = await this._clienteService.encontrarPorId(idCliente);
     if (!clientAlreadyExists) throw new Error("Cliente inexistente");
-    const fatura = new Fatura({ idCliente });
+    const ultimaFatura = await this._faturaDatabase.encontrarTodos()[-1];
+    const numeroFatura = new InvoiceNumber(ultimaFatura?.numeroFatura);
+    const fatura = new Fatura({ idCliente, numeroFatura: numeroFatura.value });
     for (const item of items) {
       const produto = await this._produtoService.encontrarPorId(item.idProduto);
       if (!produto) throw new Error("Produto não encontrado");
-      if (produto.quantidade < item.quantidade) throw new Error("Quantidade insuficiente");
+      if (produto.quantidade < item.quantidade) throw new Error(`Quantidade insuficiente: Quantidadde Disponível ${produto.quantidade} - Quantidade Solicitada ${item.quantidade}`);
       const newItem = new ItemFatura({
         idFatura: fatura.idFatura,
         idProduto: item.idProduto,
@@ -36,9 +39,21 @@ export class FaturaService {
         imposto: produto.regime == TipoRegime.REGIME_GERAL ? 14 : 0,
       });
       fatura.addItem(newItem);
+      produto.quantidade = produto.quantidade - item.quantidade;
+      await this._produtoService.actualizarQuantidade(produto.idProduto, produto.quantidade);
     }
     this._faturaDatabase.criar(fatura);
-    return fatura;
+    return {
+      idFatura: fatura.idFatura,
+      numeroFatura: fatura.numeroFatura,
+      dataEmissao: fatura.dataEmissao,
+      dataPago: fatura.dataPago,
+      nomeCliente: clientAlreadyExists.nome,
+      estado: fatura.estado,
+      total: fatura.total(),
+      criadoEm: fatura.criadoEm,
+      actualizadoEm: fatura.actualizadoEm,
+    };
   }
 
   async encontrarPorId(id: string): Promise<Fatura | undefined> {
@@ -74,4 +89,16 @@ type ItemInput = {
   idProduto: string;
   quantidade: number;
   imposto: number;
+};
+
+type FaturaOutput = {
+  idFatura: string;
+  numeroFatura: string;
+  dataEmissao: Date;
+  dataPago: Date;
+  nomeCliente: string;
+  estado: string;
+  total: number;
+  criadoEm: Date;
+  actualizadoEm: Date;
 };

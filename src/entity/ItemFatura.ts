@@ -41,6 +41,8 @@ export class ItemFatura {
     get criadoEm(): Date { return this._criadoEm; }
     get actualizadoEm(): Date { return this._actualizadoEm; }
 
+    set quantidade(quantidade: number) { this._quantidate = quantidade; }
+
     public totalSemImposto (): number {
         return this._quantidate * this._precoUnitario;
     }
