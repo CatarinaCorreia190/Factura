@@ -40,7 +40,7 @@ export class ProdutoService {
     async addQuantidade(id: string, quantidade: number): Promise<Produto> {
         const produto = await this._produtoDatabase.encontrarPorId(id);
         if (!produto) throw new Error('Produto não encontrado');
-        produto.quantidade += quantidade;
+        produto.quantidade = parseInt(String(produto.quantidade)) + parseInt(String(quantidade));
         await this._produtoDatabase.guardar(produto);
         return produto;
     }
