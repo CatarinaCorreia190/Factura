@@ -32,7 +32,7 @@ export class ClienteService {
     }
 
     async actualizarCliente(id: string, nome: string, email: string, endereco: string): Promise<Cliente> {
-        const cliente = await this._clienteDatabase.encontrarPorId(id)[0];
+        const cliente = await this._clienteDatabase.encontrarPorId(id);
         if (!cliente) {
             throw new Error("Cliente não encontrado");
         }

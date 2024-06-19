@@ -24,8 +24,8 @@ export class FaturaService {
   async criarFatura(idCliente: string, items: ItemInput[]): Promise<FaturaOutput> {
     const clientAlreadyExists = await this._clienteService.encontrarPorId(idCliente);
     if (!clientAlreadyExists) throw new Error("Cliente inexistente");
-    const ultimaFatura = await this._faturaDatabase.encontrarTodos()[-1];
-    const numeroFatura = new InvoiceNumber(ultimaFatura?.numeroFatura);
+    const faturas = await this._faturaDatabase.encontrarTodos();
+    const numeroFatura = new InvoiceNumber(faturas[faturas.length - 1]?.numeroFatura);
     const fatura = new Fatura({ idCliente, numeroFatura: numeroFatura.value });
     for (const item of items) {
       const produto = await this._produtoService.encontrarPorId(item.idProduto);
@@ -42,7 +42,7 @@ export class FaturaService {
       produto.quantidade = produto.quantidade - item.quantidade;
       await this._produtoService.actualizarQuantidade(produto.idProduto, produto.quantidade);
     }
-    this._faturaDatabase.criar(fatura);
+    await this._faturaDatabase.criar(fatura);
     return {
       idFatura: fatura.idFatura,
       numeroFatura: fatura.numeroFatura,

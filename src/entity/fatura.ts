@@ -7,6 +7,10 @@ export enum TipoEstado {
     ANULADA = 'Anulada',
 }
 
+export enum TipoFatura {
+
+}
+
 type PropriedadesFatura = {
     idFatura?: string;
     numeroFatura: string;
