@@ -36,6 +36,6 @@ describe("FaturaService Unit Tests", () => {
     const newFatura = await faturaService.criarFatura(cliente.idCliente, items);
     const fatura = await faturaService.encontrarPorId(newFatura.idFatura);
     console.log(fatura);
-    expect(fatura?.total()).toBeGreaterThan(6000);
+    expect(fatura?.total).toBeGreaterThan(6000);
   })
 })

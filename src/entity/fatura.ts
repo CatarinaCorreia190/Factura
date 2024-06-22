@@ -54,6 +54,17 @@ export class Fatura {
     get estado(): string { return this._estado; }
     get criadoEm(): Date { return this._criadoEm; }
     get actualizadoEm(): Date { return this._actualizadoEm; }
+    get items(): any[] { return this._items.map((item) => {
+        return {
+            idItemFatura: item.idItemFatura,
+            idFatura: item.idFatura,
+            idProduto: item.idProduto,
+            quantidade: item.quantidade,
+            precoUnitario: item.precoUnitario,
+            totalSemImposto: item.totalSemImposto(),
+            total: item.total()
+        }
+    }) }
 
     set estado(estado: TipoEstado) { this._estado = estado }
     set actualizadoEm(value: Date) { this._actualizadoEm = value; }

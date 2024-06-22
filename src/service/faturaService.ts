@@ -56,10 +56,23 @@ export class FaturaService {
     };
   }
 
-  async encontrarPorId(id: string): Promise<Fatura | undefined> {
+  async encontrarPorId(id: string): Promise<any | undefined> {
     const fatura = await this._faturaDatabase.encontrarPorId(id);
     if (!fatura) return undefined;
-    return fatura;
+    const client = await this._clienteService.encontrarPorId(fatura.idCliente);
+    const invoice = {
+      idFatura: fatura.idFatura,
+      numeroFatura: fatura.numeroFatura,
+      dataEmissao: fatura.dataEmissao,
+      dataPago: fatura.dataPago,
+      nomeCliente: client!.nome,
+      estado: fatura.estado,
+      items: fatura.items,
+      total: fatura.total(),
+      criadoEm: fatura.criadoEm,
+      actualizadoEm: fatura.actualizadoEm,
+    }
+    return invoice;
   }
 
   async encontrarTodas(): Promise<any[]> {
