@@ -83,6 +83,29 @@ export class FaturaService {
     return invoices
   }
 
+  async encontrarTodasEmitidas(): Promise<any[]> {
+    const faturas = await this._faturaDatabase.encontrarTodos();
+    const invoices: any[] = [];
+    faturas.forEach(async (fatura) => {
+      if (fatura.estado == 'Emitida') {
+        const client = await this._clienteService.encontrarPorId(fatura.idCliente);
+        invoices.push({
+          idFatura: fatura.idFatura,
+          numeroFatura: fatura.numeroFatura,
+          dataEmissao: fatura.dataEmissao,
+          dataPago: fatura.dataPago,
+          nomeCliente: client!.nome,
+          estado: fatura.estado,
+          total: fatura.total(),
+          criadoEm: fatura.criadoEm,
+          actualizadoEm: fatura.actualizadoEm,
+        })
+      }
+    })
+
+    return invoices
+  }
+
   async pagar(id: string): Promise<Fatura> {
     const fatura = await this._faturaDatabase.encontrarPorId(id);
     if (!fatura) throw new Error("Fatura inexistente");

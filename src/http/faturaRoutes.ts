@@ -25,6 +25,15 @@ faturaRoutes.get("/",  async (req: Request, res: Response) => {
     }
 });
 
+faturaRoutes.get("/emitidas",  async (req: Request, res: Response) => {
+    try {
+        const faturas = await faturaService.encontrarTodasEmitidas();
+        res.status(200).json(faturas);
+    } catch (error: any) {
+        res.status(400).json({ "error": error.message });
+    }
+});
+
 faturaRoutes.get("/:idFatura",  async (req: Request, res: Response) => {
     const idFatura = req.params.idFatura;
     try {
