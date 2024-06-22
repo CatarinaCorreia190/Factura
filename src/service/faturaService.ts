@@ -65,7 +65,7 @@ export class FaturaService {
   async encontrarTodas(): Promise<any[]> {
     const faturas = await this._faturaDatabase.encontrarTodos();
     const invoices: any[] = [];
-    faturas.forEach(async (fatura) => {
+    for (const fatura of faturas) {
       const client = await this._clienteService.encontrarPorId(fatura.idCliente);
       invoices.push({
         idFatura: fatura.idFatura,
@@ -78,7 +78,7 @@ export class FaturaService {
         criadoEm: fatura.criadoEm,
         actualizadoEm: fatura.actualizadoEm,
       })
-    })
+    }
 
     return invoices
   }
@@ -86,7 +86,7 @@ export class FaturaService {
   async encontrarTodasEmitidas(): Promise<any[]> {
     const faturas = await this._faturaDatabase.encontrarTodos();
     const invoices: any[] = [];
-    faturas.forEach(async (fatura) => {
+    for (const fatura of faturas) {
       if (fatura.estado == 'Emitida') {
         const client = await this._clienteService.encontrarPorId(fatura.idCliente);
         invoices.push({
@@ -101,7 +101,7 @@ export class FaturaService {
           actualizadoEm: fatura.actualizadoEm,
         })
       }
-    })
+    }
 
     return invoices
   }
