@@ -39,7 +39,7 @@ export class PagamentoService {
     async encontrarTodos(): Promise<any[]> {
         const pagamentos =  await this._pagamentoDatabase.encontrarTodos();
         const payments: any[] = [];
-        pagamentos.forEach(async (pagamento) => {
+        for (const pagamento of pagamentos) {
             const invoice = await this._faturaService.encontrarPorId(pagamento.idFatura)
             payments.push({
                 idPagamento: pagamento.idPagamento,
@@ -47,7 +47,7 @@ export class PagamentoService {
                 montantePago: pagamento.montantePago,
                 emitidoEm: pagamento.criadoEm
             })
-        })
+        }
         return payments
     }
 }
