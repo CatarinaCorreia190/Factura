@@ -62,8 +62,25 @@ export class FaturaService {
     return fatura;
   }
 
-  async encontrarTodas(): Promise<Fatura[]> {
-    return await this._faturaDatabase.encontrarTodos();
+  async encontrarTodas(): Promise<any[]> {
+    const faturas = await this._faturaDatabase.encontrarTodos();
+    const invoices: any[] = [];
+    faturas.forEach(async (fatura) => {
+      const client = await this._clienteService.encontrarPorId(fatura.idCliente);
+      invoices.push({
+        idFatura: fatura.idFatura,
+        numeroFatura: fatura.numeroFatura,
+        dataEmissao: fatura.dataEmissao,
+        dataPago: fatura.dataPago,
+        nomeCliente: client!.nome,
+        estado: fatura.estado,
+        total: fatura.total(),
+        criadoEm: fatura.criadoEm,
+        actualizadoEm: fatura.actualizadoEm,
+      })
+    })
+
+    return invoices
   }
 
   async pagar(id: string): Promise<Fatura> {
