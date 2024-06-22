@@ -37,7 +37,7 @@ produtoRoutes.patch("/atualizar/:idProduto",  async (req: Request, res: Response
     const idProduto = req.params.idProduto;
     const body = req.body;
     try {
-        const result = await produtoService.actualizarProduto(idProduto, body.nome, body.descricao, body.preco);
+        const result = await produtoService.actualizarProduto(idProduto, body.nome, body.descricao, body.preco, body.regime);
         res.status(200).json(result);
     }  catch (error: any) {
         res.status(400).json({ error: error.message });

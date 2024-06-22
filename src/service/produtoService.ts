@@ -24,7 +24,7 @@ export class ProdutoService {
         return await this._produtoDatabase.encontrarTodos();
     }
 
-    async actualizarProduto(id: string, nome: string, descricao: string, preco: number): Promise<Produto> {
+    async actualizarProduto(id: string, nome: string, descricao: string, preco: number, regime: string): Promise<Produto> {
         const produto = await this._produtoDatabase.encontrarPorId(id);
         if (!produto) {
             throw new Error('Produto não encontrado');
@@ -32,6 +32,7 @@ export class ProdutoService {
         produto.nome = nome;
         produto.descricao = descricao;
         produto.preco = preco;
+        produto.regime = regime;
         produto.actualizadoEm = new Date();
         this._produtoDatabase.guardar(produto);
         return produto;
