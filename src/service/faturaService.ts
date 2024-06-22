@@ -34,6 +34,7 @@ export class FaturaService {
       const newItem = new ItemFatura({
         idFatura: fatura.idFatura,
         idProduto: item.idProduto,
+        nomeProduto: produto.nome,
         quantidade: item.quantidade,
         precoUnitario: produto.preco,
         imposto: produto.regime == TipoRegime.REGIME_GERAL ? 14 : 0,

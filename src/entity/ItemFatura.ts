@@ -4,6 +4,7 @@ export type PropriedadeItemFatura = {
   idItemFatura?: string;
   idFatura: string;
   idProduto: string;
+  nomeProduto: string;
   quantidade: number;
   precoUnitario: number;
   imposto: number;
@@ -15,6 +16,7 @@ export class ItemFatura {
     private _idItemFatura: string;
     private _idFatura: string;
     private _idProduto: string;
+    private _nomeProduto: string;
     private _quantidate: number;
     private _precoUnitario: number;
     private _imposto: number;
@@ -25,6 +27,7 @@ export class ItemFatura {
         this._idItemFatura = propriedades.idItemFatura ?? crypto.randomUUID();
         this._idFatura = propriedades.idFatura;
         this._idProduto = propriedades.idProduto;
+        this._nomeProduto = propriedades.nomeProduto;
         this._quantidate = propriedades.quantidade;
         this._precoUnitario = propriedades.precoUnitario;
         this._imposto = propriedades.imposto;
@@ -35,6 +38,7 @@ export class ItemFatura {
     get idItemFatura(): string { return this._idItemFatura; }
     get idFatura(): string { return this._idFatura; }
     get idProduto(): string { return this._idProduto; }
+    get nomeProduto(): string { return this._nomeProduto }
     get quantidade(): number { return this._quantidate; }
     get precoUnitario(): number { return this._precoUnitario; }
     get imposto(): number { return this._imposto; }

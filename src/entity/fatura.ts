@@ -59,6 +59,7 @@ export class Fatura {
             idItemFatura: item.idItemFatura,
             idFatura: item.idFatura,
             idProduto: item.idProduto,
+            nomeProduto: item.nomeProduto,
             quantidade: item.quantidade,
             precoUnitario: item.precoUnitario,
             totalSemImposto: item.totalSemImposto(),
@@ -96,4 +97,5 @@ export class Fatura {
         })
         return total;
     }
+
 }
