@@ -12,7 +12,7 @@ export class PagamentoService {
         this._faturaService = faturaService;
     }
 
-    async criarPagamento(idFatura: string, montantePago: number): Promise<Pagamento> {
+    async criarPagamento(idFatura: string, montantePago: number): Promise<any> {
         const fatura = await this._faturaService.encontrarPorId(idFatura);
         if (!fatura) throw new Error("Fatura inexistente");
         if (montantePago < fatura.total()) throw new Error("Montante entrege é insuficiente");
@@ -22,7 +22,12 @@ export class PagamentoService {
         });
         await this._faturaService.pagar(fatura.idFatura);
         await this._pagamentoDatabase.criar(pagamento);
-        return pagamento;
+        return {
+            idPagamento: pagamento.idPagamento,
+            numeroFatura: fatura!.numeroFatura,
+            montantePago: pagamento.montantePago,
+            emitidoEm: pagamento.criadoEm
+        };
     }
 
     async encontrarPorId(id: string): Promise<Pagamento | undefined> {
@@ -31,7 +36,18 @@ export class PagamentoService {
         return pagamentoEncontrado;
     }
 
-    async encontrarTodos(): Promise<Pagamento[]> {
-        return this._pagamentoDatabase.encontrarTodos();
+    async encontrarTodos(): Promise<any[]> {
+        const pagamentos =  await this._pagamentoDatabase.encontrarTodos();
+        const payments: any[] = [];
+        pagamentos.forEach(async (pagamento) => {
+            const invoice = await this._faturaService.encontrarPorId(pagamento.idFatura)
+            payments.push({
+                idPagamento: pagamento.idPagamento,
+                numeroFatura: invoice!.numeroFatura,
+                montantePago: pagamento.montantePago,
+                emitidoEm: pagamento.criadoEm
+            })
+        })
+        return payments
     }
 }
