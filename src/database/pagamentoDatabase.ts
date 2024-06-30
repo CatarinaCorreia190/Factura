@@ -23,7 +23,7 @@ export class PagamentoDatabase {
         const pagamento = new Pagamento({
             idPagamento: result.idpagamento,
             idFatura: result.idfatura,
-            dataDePagamento: result.dataDepagamento,
+            dataDePagamento: result.datadepagamento,
             montantePago: result.montantepago,
             criadoEm: result.criadoem,
             actualizadoEm: result.actualizadoem,
@@ -36,12 +36,12 @@ export class PagamentoDatabase {
         const result = await this.connection.query(query, undefined);
         return result.map((pagamento: any) => {
             return new Pagamento({
-                idPagamento: result.idpagamento,
-                idFatura: result.idfatura,
-                dataDePagamento: result.dataDepagamento,
-                montantePago: result.montantepago,
-                criadoEm: result.criadoem,
-                actualizadoEm: result.actualizadoem,
+                idPagamento: pagamento.idpagamento,
+                idFatura: pagamento.idfatura,
+                dataDePagamento: pagamento.dataDepagamento,
+                montantePago: pagamento.montantepago,
+                criadoEm: pagamento.criadoem,
+                actualizadoEm: pagamento.actualizadoem,
             });
         });
     }

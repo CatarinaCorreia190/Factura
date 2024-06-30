@@ -46,14 +46,14 @@ export class FaturaDatabase {
             criadoEm: result.criadoem,
             actualizadoEm: result.actualizadoem,
         });
-        query = `SELECT * FROM itemfatura WHERE idFatura = $1`;
-        const resultItems = await this.connection.query(query, id);
+        const queryItems = `SELECT * FROM itemfatura WHERE idFatura = $1`;
+        const resultItems = await this.connection.query(queryItems, id);
         resultItems.forEach(item => {
             const newItem = new ItemFatura({
                 idItemFatura: item.iditemfatura,
                 idFatura: item.idfatura,
                 idProduto: item.idproduto,
-                nomeProduto: item.nome,
+                nomeProduto: item.nomeProduto,
                 quantidade: item.quantidade,
                 precoUnitario: parseFloat(item.precounitario),
                 imposto: parseFloat(item.imposto),

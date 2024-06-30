@@ -8,16 +8,28 @@ import {FaturaDatabase} from "../src/database/faturaDatabase";
 import {PagamentoDatabase} from "../src/database/pagamentoDatabase";
 import PgPromiseAdapter from "../src/database/pgPromiseAdapter";
 
+let pgDatabaseAdapter;
+let produtoDatabase;
+let clienteDatabase;
+let faturaDatabase;
+let produtoService;
+let clienteService;
+let faturaService;
+let pagamentoDatabase;
+
 describe('PagamentoService unit tests', () => {
+    beforeAll(() => {
+        pgDatabaseAdapter = new PgPromiseAdapter()
+        produtoDatabase = new ProdutoDatabase(pgDatabaseAdapter);
+        clienteDatabase = new ClienteDatabase(pgDatabaseAdapter)
+        faturaDatabase = new FaturaDatabase(pgDatabaseAdapter)
+        pagamentoDatabase = new PagamentoDatabase(pgDatabaseAdapter)
+        produtoService = new ProdutoService(produtoDatabase);
+        clienteService = new ClienteService(clienteDatabase);
+        faturaService = new FaturaService(faturaDatabase, produtoService, clienteService);
+    })
+
     test("Deve criar um pagamento e alterar o estado da fatura para pago", async () => {
-        const pgDatabaseAdapter = new PgPromiseAdapter()
-        const produtoDatabase = new ProdutoDatabase(pgDatabaseAdapter);
-        const clienteDatabase = new ClienteDatabase(pgDatabaseAdapter)
-        const faturaDatabase = new FaturaDatabase(pgDatabaseAdapter)
-        const pagamentoDatabase = new PagamentoDatabase(pgDatabaseAdapter)
-        const produtoService = new ProdutoService(produtoDatabase);
-        const clienteService = new ClienteService(clienteDatabase);
-        const faturaService = new FaturaService(faturaDatabase, produtoService, clienteService);
         const pagamentoService = new PagamentoService(pagamentoDatabase, faturaService);
 
         const cliente = await clienteService.criarCliente("Any Name", `0987654321${Math.random()}LA098`, `example${Math.random()}@example.com`, "Luanda, Angola");
@@ -47,5 +59,15 @@ describe('PagamentoService unit tests', () => {
         console.log(pagamento);
         expect(fatura?.estado).toBe("Pago");
         expect(pagamento?.idFatura).toBe(fatura?.idFatura);
-    }, 10000)
+    }, 10000);
+
+    test('Should return all payments',  async () => {
+        const pagamentoService = new PagamentoService(pagamentoDatabase, faturaService);
+        const pagamentos = await pagamentoService.encontrarTodos()
+        expect(pagamentos.length).toBeGreaterThan(1)
+    })
+
+    afterAll(() => {
+        pgDatabaseAdapter.close()
+    })
 })
