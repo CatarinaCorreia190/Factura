@@ -69,7 +69,7 @@ export class FaturaService {
       nomeCliente: client!.nome,
       estado: fatura.estado,
       items: fatura.items,
-      total: fatura.total(),
+      total: fatura.total,
       criadoEm: fatura.criadoEm,
       actualizadoEm: fatura.actualizadoEm,
     }
@@ -110,7 +110,7 @@ export class FaturaService {
           dataPago: fatura.dataPago,
           nomeCliente: client!.nome,
           estado: fatura.estado,
-          total: fatura.total(),
+          total: fatura.total,
           criadoEm: fatura.criadoEm,
           actualizadoEm: fatura.actualizadoEm,
         })

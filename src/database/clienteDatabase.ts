@@ -1,51 +1,60 @@
-import {Cliente} from "../entity/cliente";
+import { Cliente } from "../entity/cliente";
+import pgPromise from "pg-promise";
+import Connection from "./connection";
+
+const pgp = pgPromise();
 
 export class ClienteDatabase {
     private static instance: ClienteDatabase;
-    private _cliente: Cliente[] = [];
 
-    static getInstance() {
-        if (!ClienteDatabase.instance) {
-            ClienteDatabase.instance = new ClienteDatabase();
-        }
-        return ClienteDatabase.instance;
-    }
+    public constructor(private readonly connection: Connection) {}
 
     async criar(cliente: Cliente): Promise<void> {
-        this._cliente.push(cliente)
+        const query = `
+            INSERT INTO cliente (idcliente, nome, nif, email, endereco)
+            VALUES ($1, $2, $3, $4, $5)
+        `;
+        const values = [cliente.idCliente, cliente.nome, cliente.nif, cliente.email, cliente.endereco];
+        await this.connection.query(query, values)
     }
 
-    async encontrarPorId(id: string): Promise<Cliente | undefined> {
-        const clienteEncontrado = this._cliente.filter((cliente) => cliente.idCliente === id)[0];
-        if (!clienteEncontrado) {
+    async encontrarPorCampo(campo: string, valor: string): Promise<Cliente | undefined> {
+        const query = `SELECT * FROM cliente WHERE ${campo} = $1`;
+        const [result] = await this.connection.query(query, valor);
+        if (!result) {
             return undefined;
         }
-        return clienteEncontrado;
-    }
-
-    async encontrarPorNif(nif: string): Promise<Cliente | undefined> {
-        const clienteEncontrado = this._cliente.filter((cliente) => cliente.nif === nif)[0];
-        if (!clienteEncontrado) {
-            return undefined;
-        }
-        return clienteEncontrado;
-    }
-
-    async encontrarPorEmail(email: string): Promise<Cliente | undefined> {
-        const clienteEncontrado = this._cliente.filter((cliente) => cliente.email === email)[0];
-        if (!clienteEncontrado) {
-            return undefined;
-        }
-        return clienteEncontrado;
+        const cliente = new Cliente({
+            idCliente: result.idcliente,
+            nif: result.nif,
+            nome: result.nome,
+            email: result.email,
+            endereco: result.endereco,
+            criadoEm: result.criadoEm,
+            actualizadoEm: result.actualizadoEm,
+        })
+        return cliente;
     }
 
     async encontrarTodos(): Promise<Cliente[]> {
-        return this._cliente;
+        const query = `SELECT * FROM cliente`;
+        const result = await this.connection.query(query, undefined);
+        return result.map((cliente: any) => {
+            return new Cliente({
+                idCliente: cliente.idcliente,
+                nif: cliente.nif,
+                nome: cliente.nome,
+                email: cliente.email,
+                endereco: cliente.endereco,
+                criadoEm: cliente.criadoEm,
+                actualizadoEm: cliente.actualizadoEm,
+            })
+        });
     }
 
     async guardar(cliente: Cliente): Promise<void> {
-        const clienteIndex = this._cliente.findIndex((currentCliente) => currentCliente.idCliente === cliente.idCliente);
-        if (clienteIndex === -1) return undefined;
-        this._cliente[clienteIndex] = cliente;
+        const query = `UPDATE cliente SET nome = $1, nif = $2, email = $3, endereco = $4, actualizado_em = CURRENT_TIMESTAMP WHERE idcliente = $5`;
+        const values = [cliente.nome, cliente.nif, cliente.email, cliente.endereco, cliente.idCliente];
+        await this.connection.query(query, values);
     }
 }

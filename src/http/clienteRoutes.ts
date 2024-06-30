@@ -2,10 +2,12 @@ import { Request, Response, Router} from "express";
 import {ClienteDatabase} from "../database/clienteDatabase";
 import {ClienteService} from "../service/clienteService";
 import {cors} from "./cors";
+import PgPromiseAdapter from "../database/pgPromiseAdapter";
 
 
 const clienteRoutes = Router();
-const clienteDatabase = ClienteDatabase.getInstance();
+const pgDatabaseAdapter = new PgPromiseAdapter()
+const clienteDatabase = new ClienteDatabase(pgDatabaseAdapter)
 const clienteService = new ClienteService(clienteDatabase);
 
 clienteRoutes.get("/", async (req: Request, res: Response) => {

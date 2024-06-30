@@ -80,7 +80,7 @@ export class Fatura {
         this._estado = TipoEstado.ANULADA;
     }
 
-    addItem(itemFatura: ItemFatura) {
+    public addItem(itemFatura: ItemFatura) {
         this._items.forEach((item) => {
             if (item.idProduto == itemFatura.idProduto) {
                 item.quantidade = item.quantidade + itemFatura.quantidade;
@@ -90,7 +90,7 @@ export class Fatura {
         this._items.push(itemFatura);
     }
 
-    total (): number {
+    public total(): number {
         let total = 0;
         this._items.forEach((item) => {
             total += item.total();

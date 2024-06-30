@@ -1,9 +1,17 @@
 import {ProdutoService} from "../src/service/produtoService";
 import {ProdutoDatabase} from "../src/database/produtoDatabase";
+import PgPromiseAdapter from "../src/database/pgPromiseAdapter";
+import Connection from "../src/database/connection";
+
+let pgDatabaseAdapter: Connection;
+let produtoDatabase: ProdutoDatabase;
 
 describe('ProdutoService Unit Tests', () => {
+    beforeAll(async () => {
+        pgDatabaseAdapter = new PgPromiseAdapter()
+        produtoDatabase = new ProdutoDatabase(pgDatabaseAdapter)
+    })
     test('Deve criar um produto', async () => {
-        const produtoDatabase = ProdutoDatabase.getInstance()
         const produtoService = new ProdutoService(produtoDatabase);
         const nome = "arroz";
         const descricao = "Arroz Tio Lucas de 1KG";
@@ -20,7 +28,6 @@ describe('ProdutoService Unit Tests', () => {
     })
 
     test("Deve guardar um produto", async () => {
-        const produtoDatabase = ProdutoDatabase.getInstance()
         const produtoService = new ProdutoService(produtoDatabase);
         const nome = "arroz";
         const descricao = "Arroz Tio Lucas de 1KG";
@@ -30,5 +37,8 @@ describe('ProdutoService Unit Tests', () => {
         const produtoCriado = await produtoService.encontrarPorId(produto.idProduto);
         const produtoGuardado = await produtoService.addQuantidade(produto.idProduto, 10)
         expect(produtoGuardado?.quantidade).toBe(10);
+    })
+    afterAll(async () => {
+        pgDatabaseAdapter.close()
     })
 })

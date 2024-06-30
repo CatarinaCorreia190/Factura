@@ -8,16 +8,18 @@ import {ProdutoService} from "../service/produtoService";
 import {PagamentoDatabase} from "../database/pagamentoDatabase";
 import {PagamentoService} from "../service/pagamentoService";
 import {cors} from "./cors";
+import PgPromiseAdapter from "../database/pgPromiseAdapter";
 
 
 const pagamentoRoutes = Router();
-const produtoDatabase = ProdutoDatabase.getInstance()
+const pgDatabaseAdapter = new PgPromiseAdapter()
+const produtoDatabase = new ProdutoDatabase(pgDatabaseAdapter);
+const clienteDatabase = new ClienteDatabase(pgDatabaseAdapter)
+const faturaDatabase = new FaturaDatabase(pgDatabaseAdapter)
+const pagamentoDatabase = new PagamentoDatabase(pgDatabaseAdapter)
 const produtoService = new ProdutoService(produtoDatabase);
-const clienteDatabase = ClienteDatabase.getInstance();
 const clienteService = new ClienteService(clienteDatabase);
-const faturaDatabase = FaturaDatabase.getInstance();
 const faturaService = new FaturaService(faturaDatabase, produtoService, clienteService);
-const pagamentoDatabase = PagamentoDatabase.getInstance();
 const pagamentoService = new PagamentoService(pagamentoDatabase, faturaService);
 
 pagamentoRoutes.get("/",  async (req: Request, res: Response) => {
