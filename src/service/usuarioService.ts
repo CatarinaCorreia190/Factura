@@ -18,7 +18,9 @@ export class UsuarioService {
             nome,
             sobrenome,
             email,
-            tipo
+            tipo,
+            criadoEm: usuario.criadoEm,
+            actualizadoEm: usuario.actualizadoEm,
         }
     }
 
