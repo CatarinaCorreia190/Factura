@@ -30,7 +30,7 @@ UsuarioRouter.get("/:idUsuario", async (req: Request, res: Response) => {
 UsuarioRouter.post("/",  async (req: Request, res: Response) => {
     const body = req.body;
     try {
-        const usuario = await usuarioService.signup(body.name, body.sobrenome, body.email, body.password, body.tipo);
+        const usuario = await usuarioService.signup(body.nome, body.sobrenome, body.email, body.password, body.tipo);
         res.status(200).json(usuario);
     } catch (error: any) {
         res.status(400).json({ "error": error.message });
