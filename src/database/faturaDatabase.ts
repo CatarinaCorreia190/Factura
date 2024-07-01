@@ -88,7 +88,7 @@ export class FaturaDatabase {
                     idItemFatura: item.iditemfatura,
                     idFatura: item.idfatura,
                     idProduto: item.idproduto,
-                    nomeProduto: item.nomeProduto,
+                    nomeProduto: item.nomeproduto,
                     quantidade: item.quantidade,
                     precoUnitario: parseFloat(item.precounitario),
                     imposto: parseFloat(item.imposto),
